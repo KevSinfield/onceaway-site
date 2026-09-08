@@ -53,7 +53,7 @@ export const howItWorks = {
   steps: [
     {
       title: 'Onceaway notices',
-      text: 'It watches privacy-safe activity on your Mac: which applications you move between, coarse file events in folders you choose, and — only for browsers you switch on — the website host of the tab in front of you.',
+      text: 'It watches privacy-safe activity on your Mac: which applications you move between, coarse file events in the folders it watches, and — only for browsers you switch on — the website host of the tab in front of you.',
     },
     {
       title: 'You confirm',
@@ -152,8 +152,8 @@ export const privacy = {
     'That sounds like a slogan; it is actually the order the code runs in. Protection is checked first, and when it applies, the detail is never collected — not collected and then filtered.',
   cards: [
     {
-      title: 'Password fields stop the detail',
-      text: 'While you are typing into a password field, Onceaway stops recording detail about what you are doing. Password managers are protected all the time.',
+      title: 'Password managers are always protected',
+      text: 'Credential apps are treated as private whenever they are in front, and that cannot be switched off. Nothing in Onceaway records what you type, in any application.',
     },
     {
       title: 'It records the kind of thing, not the thing',
@@ -177,7 +177,7 @@ export const observes = {
     title: 'What Onceaway notices',
     items: [
       'The applications you move between, and when.',
-      'Coarse file events in folders you choose: that a file of some type was created, renamed or moved, and roughly where.',
+      'Coarse file events in the folders it watches — Downloads and Desktop unless you change them: that a file of some type was created, renamed or moved, and roughly where.',
       'The website host of the active tab — only for browsers you switch on, and only the host, never the address.',
     ],
   },
