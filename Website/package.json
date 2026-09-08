@@ -1,0 +1,19 @@
+{
+  "name": "onceaway-website",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The public Onceaway marketing and download website.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --watch --serve",
+    "serve": "node build.mjs --serve",
+    "test": "node --test --test-concurrency=1 test/*.test.mjs"
+  },
+  "dependencies": {
+    "markdown-it": "14.3.1"
+  }
+}
