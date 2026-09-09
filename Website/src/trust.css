@@ -73,25 +73,49 @@
 
 /* ------------------------------------ privacy and security: the long form */
 
+/* A reference page, so on a wide screen the questions stay in reach beside
+   the answers rather than scrolling away above them. The answers keep a
+   readable measure; the rules between them stop where the text stops. */
+
+.privacy-page h1 { font-size: var(--step-3); }
+.privacy-page .lede { margin-bottom: 40px; }
+
+.pp { display: grid; gap: 40px; align-items: start; }
+.pp__body { min-width: 0; max-width: 62ch; }
+
 .contents {
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
-  margin: 2.5rem 0 1rem;
-  padding: 1.5rem 1.75rem;
+  gap: 0.5rem;
+  padding: 1.35rem 1.5rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-small);
   background: var(--light);
 }
 
+.contents__title {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--body-muted);
+}
+
 .contents a {
   color: var(--body);
   text-decoration: none;
-  font-size: 0.98rem;
+  font-size: 0.9375rem;
+  line-height: 1.35;
 }
 
 .contents a:hover,
 .contents a:focus-visible { color: var(--green-text); text-decoration: underline; }
+
+@media (min-width: 64rem) {
+  .pp { grid-template-columns: minmax(210px, 270px) minmax(0, 1fr); gap: 72px; }
+  .contents { position: sticky; top: 92px; }
+}
 
 .qa {
   padding: 2.25rem 0;
@@ -125,3 +149,12 @@
 
 /* The trust strip again, this time inside a band rather than under the hero. */
 .strip--inline { margin: 2.25rem 0 0; }
+
+
+/* .note-card paints its own dark surface, so it has to carry its own
+   foreground colours. It was only ever used inside an ink band, where the
+   band supplied them; on paper the heading and the button inherited the dark
+   text of the light theme and disappeared into the card. */
+.note-card h3 { color: var(--off-white); }
+.note-card .button--quiet { color: var(--off-white); border-color: var(--border-dark); }
+.note-card .button--quiet:hover { background: rgba(233, 236, 241, 0.07); }
