@@ -523,7 +523,7 @@ export function privacySecurityPage() {
   const block = copy.privacyPage
   const body = section({
     tone: 'paper',
-    className: 'prose-band',
+    className: 'prose-band privacy-page',
     inner: `
     <div class="lede">
       ${eyebrow(block.eyebrow)}
@@ -531,27 +531,32 @@ export function privacySecurityPage() {
       <p class="standfirst">${escapeHtml(block.standfirst)}</p>
       <p class="hero__note">${escapeHtml(block.note)}</p>
     </div>
-    <nav class="contents" aria-label="On this page">
-      ${block.sections
-        .map((item) => `<a href="#${item.id}">${escapeHtml(item.question)}</a>`)
-        .join('')}
-    </nav>
-    ${block.sections
-      .map(
-        (item) => `
-    <article class="qa" id="${item.id}">
-      <h2 class="qa__question">${escapeHtml(item.question)}</h2>
-      ${item.answer ? `<p class="qa__answer">${escapeHtml(item.answer)}</p>` : ''}
-      ${paragraphs(item.body)}
-    </article>`
-      )
-      .join('')}
-    <div class="note-card">
-      <h3>${escapeHtml(block.help.heading)}</h3>
-      <p>${escapeHtml(block.help.text)}</p>
-      <p><a class="button button--quiet" href="${config.helpURL}" rel="noreferrer">${escapeHtml(
-        config.helpLabel
-      )}</a></p>
+    <div class="pp">
+      <nav class="contents" aria-label="On this page">
+        <p class="contents__title">On this page</p>
+        ${block.sections
+          .map((item) => `<a href="#${item.id}">${escapeHtml(item.question)}</a>`)
+          .join('')}
+      </nav>
+      <div class="pp__body">
+        ${block.sections
+          .map(
+            (item) => `
+        <article class="qa" id="${item.id}">
+          <h2 class="qa__question">${escapeHtml(item.question)}</h2>
+          ${item.answer ? `<p class="qa__answer">${escapeHtml(item.answer)}</p>` : ''}
+          ${paragraphs(item.body)}
+        </article>`
+          )
+          .join('')}
+        <div class="note-card">
+          <h3>${escapeHtml(block.help.heading)}</h3>
+          <p>${escapeHtml(block.help.text)}</p>
+          <p><a class="button button--quiet" href="${config.helpURL}" rel="noreferrer">${escapeHtml(
+            config.helpLabel
+          )}</a></p>
+        </div>
+      </div>
     </div>`,
   })
   return page({
