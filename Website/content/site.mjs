@@ -161,11 +161,11 @@ export const privacy = {
     },
     {
       title: 'Your history stays on your Mac',
-      text: 'What Onceaway noticed lives in a file on your Mac. There is no account, nothing to sign in to, and nothing is uploaded.',
+      text: 'What Onceaway noticed lives in a file on your Mac. There is no account, nothing to sign in to, and your history is never uploaded.',
     },
     {
       title: 'AI is off until you turn it on',
-      text: 'Nothing leaves your Mac unless you ask for an AI suggestion — and that needs an API key you add yourself.',
+      text: 'Two things can leave your Mac, and only when you ask: an AI suggestion, which needs an API key you add yourself, and feedback you choose to send.',
     },
   ],
 }
@@ -188,6 +188,7 @@ export const observes = {
       'No keystrokes, and no clipboard.',
       'No page contents, and no web addresses.',
       'No filenames and no file paths.',
+      'No microphone, and no camera.',
     ],
   },
 }
@@ -281,6 +282,267 @@ export const preview = {
 export const footer = {
   tagline: 'Make repeated work go away.',
   note: 'Onceaway is in Preview. Everything on this page describes the current build.',
+}
+
+/**
+ * Works offline.
+ *
+ * The careful bit is the claim itself: the core of Onceaway runs without a
+ * connection, which is not the same as never needing one. Saying the second
+ * would be quicker and would not be true.
+ */
+export const offline = {
+  eyebrow: 'Offline',
+  heading: 'Works locally, even offline.',
+  body: [
+    'Noticing repeated work happens on your Mac. Onceaway does not need an internet connection to see that something recurred, or to keep building the history of what it noticed — that is ordinary local comparison, not a question sent to a server.',
+    'A connection is needed only when you use something that requires one: asking for an AI suggestion, sending feedback, or opening the Help guide.',
+  ],
+  strip: [
+    'Core observation works offline',
+    'History stays on your Mac',
+    'Internet only for the features that need it',
+  ],
+  line: 'Not “never needs the internet” — that would not be true. Its core observation works without one.',
+}
+
+/**
+ * The five-second version, directly under the hero.
+ *
+ * Every line here is stated properly further down the page. Nothing appears
+ * in this strip that is not made good somewhere else: a scannable claim is
+ * still a claim.
+ */
+export const trustStrip = {
+  label: 'What Onceaway does not do',
+  items: [
+    'No screen recording',
+    'No keystroke capture',
+    'No microphone',
+    'No camera',
+    'Activity stays on your Mac',
+  ],
+}
+
+/**
+ * What Send Feedback sends.
+ *
+ * This is the one routine thing that leaves the Mac, so it is written out in
+ * full rather than summarised. If the list ever grows, this is the file that
+ * has to change first.
+ */
+export const feedback = {
+  eyebrow: 'Feedback',
+  heading: 'The one thing that leaves your Mac, written out in full.',
+  standfirst:
+    'Send Feedback goes straight to us. So that a report can be made sense of, a short list of diagnostics travels with the message.',
+  sends: {
+    title: 'What goes with your message',
+    items: [
+      'Which version of Onceaway you are running.',
+      'Which screen you were on.',
+      'Whether observation was on or off.',
+      'Your macOS version and Mac architecture.',
+      'A screenshot — only if you attach one yourself.',
+    ],
+  },
+  withheld: {
+    title: 'What is never attached',
+    items: [
+      'What Onceaway noticed.',
+      'Your files, or anything about them.',
+      'Your browsing.',
+      'Your API key, and anything AI was asked or answered.',
+    ],
+  },
+  line: 'Onceaway never takes a screenshot on its own. The only screenshot it can send is one you chose.',
+}
+
+/**
+ * The question a cautious business owner actually asks, answered with
+ * architecture rather than reassurance.
+ */
+export const breach = {
+  eyebrow: 'The hard question',
+  heading: 'What if Onceaway gets hacked?',
+  body: [
+    'It is a fair question to ask of anything you let near your work, and the honest answer is about what there would be to take.',
+    'Onceaway does not run a central database of everyone’s computer activity. What it noticed on your Mac is in a file on your Mac. If the service that receives feedback were compromised, your record of how you work would not be sitting in it, because it was never sent there.',
+    'What could be exposed is what you deliberately sent: the words of any feedback, the diagnostics above, and any screenshot you attached. That is worth knowing before you attach one.',
+  ],
+  line: 'Local because of how it is built, not because of a setting you have to find.',
+}
+
+/** The questions people ask before installing. Longer answers on the Privacy page. */
+export const faq = {
+  eyebrow: 'Before you install',
+  heading: 'The questions people actually ask.',
+  items: [
+    {
+      question: 'Does Onceaway record my screen?',
+      answer:
+        'No. No screen recording and no automatic screenshots. The only screenshot it can send is one you attach to feedback yourself.',
+    },
+    {
+      question: 'Does it record what I type?',
+      answer: 'No. Nothing in Onceaway records keystrokes, in any application.',
+    },
+    {
+      question: 'Can it see passwords or banking details?',
+      answer:
+        'No. Credential apps are always treated as private. In a browser it may see that a site was open and, if you switched that browser on, its host — never the address, the page, or anything on it.',
+    },
+    {
+      question: 'Is my activity uploaded?',
+      answer:
+        'No. What Onceaway noticed stays in a file on your Mac. There is no account and nothing to sign in to.',
+    },
+    {
+      question: 'Does it use my camera or microphone?',
+      answer: 'No. Onceaway uses neither.',
+    },
+    {
+      question: 'Can Onceaway do something without asking me?',
+      answer:
+        'No. No observation, AI answer or suggestion can cause an action on its own. You see the exact action written out, and you approve it.',
+    },
+    {
+      question: 'What happens when I send feedback?',
+      answer:
+        'Your message goes to us with a short list of diagnostics, and a screenshot only if you attach one. What Onceaway noticed, your files and your browsing are not attached.',
+    },
+    {
+      question: 'Does it need an internet connection?',
+      answer:
+        'Not to do its main job. Noticing repeated work and keeping your history happen on your Mac. A connection is needed only for an AI suggestion, sending feedback, or opening Help.',
+    },
+    {
+      question: 'Can I delete what Onceaway has stored?',
+      answer:
+        'Yes. It is one local database in your Application Support folder. Delete the folder and it is gone.',
+    },
+  ],
+  more: 'Longer answers to all of these, and a few more',
+}
+
+/**
+ * The Privacy and Security page: the same answers at length, for the person
+ * who wants them before they will install anything.
+ */
+export const privacyPage = {
+  eyebrow: 'Privacy and Security',
+  headline: 'What Onceaway sees, and what it does not.',
+  standfirst:
+    'Your Mac may hold banking information, customer details, business records and a good deal that is nobody else’s business. Onceaway was designed around that rather than apologising for it afterwards.',
+  note: 'This is the plain-English version rather than the legal one. It is here so you can decide before you install anything.',
+  sections: [
+    {
+      id: 'observes',
+      question: 'What does Onceaway actually observe?',
+      body: [
+        'The shape of your work rather than its content: which applications you move between and when, coarse file events in the folders it watches, and — only for browsers you switch on — the host of the site in the active tab.',
+        'A coarse file event means that a file of some type was created, renamed or moved, and roughly where. Not which file, and not what was in it.',
+        'From that it looks for sequences that occur more than once. It does not need to know what was inside any of those applications to see the same shape recurring.',
+      ],
+    },
+    {
+      id: 'typing',
+      question: 'Does Onceaway see what I type?',
+      answer: 'No',
+      body: [
+        'Nothing in Onceaway records keystrokes, in any application. Not the words, not the field they went into, not passwords, and not what you paste.',
+      ],
+    },
+    {
+      id: 'banking',
+      question: 'Can Onceaway see my banking information?',
+      answer: 'No',
+      body: [
+        'Password managers and credential apps are treated as private whenever they are in front, and that cannot be switched off.',
+        'If you bank in a browser, Onceaway may record that the browser was the application in front of you and — only if you switched that browser on — the host of the site. Not the address, not the page, not a balance, not a login, and nothing displayed on screen.',
+        'That you spent twenty minutes in a browser is the kind of thing it notices. What you did in there is not.',
+      ],
+    },
+    {
+      id: 'screen',
+      question: 'Does Onceaway record my screen?',
+      answer: 'No',
+      body: [
+        'There is no screen recording, and Onceaway never takes a screenshot on its own.',
+        'A screenshot can only reach us if you attach one yourself when sending feedback.',
+      ],
+    },
+    {
+      id: 'camera',
+      question: 'Does it use my microphone or camera?',
+      answer: 'No',
+      body: ['Onceaway uses neither. There is no audio or video capture of any kind.'],
+    },
+    {
+      id: 'stored',
+      question: 'Where is what it noticed stored?',
+      body: [
+        'In one local database in your own Application Support folder, on the Mac that produced it. There is no account and nothing to sign in to.',
+        'If you add an AI key it goes into the macOS Keychain — never a file, never a preference, never a log.',
+      ],
+    },
+    {
+      id: 'uploaded',
+      question: 'Is my activity uploaded to Onceaway?',
+      answer: 'No',
+      body: [
+        'What Onceaway noticed is not uploaded, and there is no central database of it to upload into.',
+        'To be precise rather than absolute: two things can leave your Mac, and both because you asked. An AI suggestion, if you have added your own API key and pressed something. And feedback, if you send it. Neither happens in the background.',
+      ],
+    },
+    {
+      id: 'offline',
+      question: 'Does Onceaway need an internet connection?',
+      body: [
+        'Not for the part that matters. Noticing that a sequence has recurred is ordinary local comparison on your own machine, and the history it builds is a file on that machine. Both work with the connection off.',
+        'A connection is needed when you ask for something that requires one: an AI suggestion, sending feedback, or opening the Help guide. None of those happen on their own.',
+        'Which is worth stating precisely: Onceaway’s core observation works without an internet connection. That is not the same as never needing the internet, and it would be easy but untrue to say so.',
+      ],
+    },
+    {
+      id: 'feedback',
+      question: 'What is sent when I use Send Feedback?',
+      body: [
+        'Your message, and a short list of diagnostics so the report can be made sense of: which version of Onceaway you are running, which screen you were on, whether observation was on or off, and your macOS version and Mac architecture.',
+        'A screenshot is included only if you attached one. What Onceaway noticed, your files, your browsing and your API key are not attached, and there is no option that would attach them.',
+      ],
+    },
+    {
+      id: 'breach',
+      question: 'What happens if Onceaway’s servers are compromised?',
+      body: [
+        'Onceaway does not operate a central database containing what it noticed on your Mac, so there is no copy of it on a server to lose. It is in a file on your own machine.',
+        'What could be exposed is what you deliberately sent: the words of any feedback, the diagnostics above, and any screenshot you attached. Worth knowing before you attach one.',
+      ],
+    },
+    {
+      id: 'actions',
+      question: 'Can Onceaway do things on my Mac without asking?',
+      answer: 'No',
+      body: [
+        'No observed event, AI answer or recommendation can directly cause an action. That is the rule the product is built around rather than a setting inside it.',
+        'Today the one thing it can do is move a single file you have chosen, to a place you have chosen, after you have seen the exact move written out and approved it. Then it runs, once.',
+      ],
+    },
+    {
+      id: 'delete',
+      question: 'Can I delete what Onceaway has stored?',
+      answer: 'Yes',
+      body: [
+        'Everything Onceaway noticed is one local database in your Application Support folder. Delete the folder and it is gone.',
+        'The Help guide covers removing Onceaway properly, step by step.',
+      ],
+    },
+  ],
+  help: {
+    heading: 'Still not answered?',
+    text: 'The Help guide goes further: what it observes, what it never records, how AI fits in, and how it asks before it acts.',
+  },
 }
 
 /**
