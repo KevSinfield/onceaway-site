@@ -4,7 +4,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { config, url } from './config.mjs'
 import { loadReleases } from './lib/changelog.mjs'
-import { changelogPage, homePage, notFoundPage } from './lib/templates.mjs'
+import { changelogPage, homePage, notFoundPage, privacySecurityPage } from './lib/templates.mjs'
 import { validate } from './lib/validate.mjs'
 import { iconSvg, socialCardSvg } from './src/brand.mjs'
 
@@ -35,6 +35,7 @@ export async function build({ quiet = false } = {}) {
   const pages = [
     ['index.html', homePage({ screenshots })],
     [path.join('changelog', 'index.html'), changelogPage(releases)],
+    [path.join('privacy-security', 'index.html'), privacySecurityPage()],
     ['404.html', notFoundPage()],
   ]
 
@@ -66,7 +67,12 @@ export async function build({ quiet = false } = {}) {
     await writeFile(target, html, 'utf8')
   }
 
-  await writeFile(path.join(dist, 'assets', 'theme.css'), await readFile(path.join(src, 'theme.css'), 'utf8'))
+  // theme.css is the design system; trust.css holds the styles for the
+  // privacy sections. One stylesheet reaches the browser.
+  await writeFile(
+    path.join(dist, 'assets', 'theme.css'),
+    [await readFile(path.join(src, 'theme.css'), 'utf8'), await readFile(path.join(src, 'trust.css'), 'utf8')].join('\n')
+  )
   await writeFile(path.join(dist, 'assets', 'site.js'), await readFile(path.join(src, 'site.js'), 'utf8'))
   await writeFile(path.join(dist, 'favicon.svg'), iconSvg())
   await writeFile(path.join(dist, 'social-card.svg'), socialCardSvg(config.tagline))
@@ -81,7 +87,7 @@ export async function build({ quiet = false } = {}) {
       : 'User-agent: *\nDisallow: /\n'
   )
   if (config.origin) {
-    const routes = ['', 'changelog/']
+    const routes = ['', 'changelog/', 'privacy-security/']
     await writeFile(
       path.join(dist, 'sitemap.xml'),
       `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${routes

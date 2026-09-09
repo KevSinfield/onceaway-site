@@ -8,7 +8,7 @@ import { escapeHtml, eyebrow, list, lockup, paragraphs, productFrame, section } 
 
 const nav = [
   { label: 'How it works', href: `${url('')}#how-it-works` },
-  { label: 'Privacy', href: `${url('')}#privacy` },
+  { label: 'Privacy & Security', href: url('privacy-security/') },
   { label: 'Changelog', href: url('changelog/') },
   { label: 'Help', href: config.helpURL, external: true },
 ]
@@ -39,6 +39,7 @@ const footer = () => `
     <nav class="footer__links" aria-label="Footer">
       <a href="${url('')}#how-it-works">How it works</a>
       <a href="${url('')}#privacy">Privacy</a>
+      <a href="${url('privacy-security/')}">Privacy &amp; Security</a>
       <a href="${url('changelog/')}">Changelog</a>
       <a href="${config.helpURL}" rel="noreferrer">${escapeHtml(config.helpLabel)}</a>
     </nav>
@@ -360,6 +361,100 @@ const previewSection = () => {
   })
 }
 
+/**
+ * The five-second version, directly under the hero.
+ *
+ * A strip rather than a band: it is a summary of promises kept further down,
+ * not a place to make new ones.
+ */
+const trustStripSection = () => `
+<section class="band band--paper strip-band" aria-label="${escapeHtml(copy.trustStrip.label)}">
+  <div class="wrap">
+    <ul class="strip">
+      ${copy.trustStrip.items
+        .map((item) => `<li class="strip__item">${escapeHtml(item)}</li>`)
+        .join('')}
+    </ul>
+  </div>
+</section>`
+
+const offlineSection = () =>
+  section({
+    id: 'offline',
+    tone: 'paper',
+    inner: `
+    <div class="lede">
+      ${eyebrow(copy.offline.eyebrow)}
+      <h2>${escapeHtml(copy.offline.heading)}</h2>
+      ${paragraphs(copy.offline.body, 'standfirst')}
+    </div>
+    <ul class="strip strip--inline">
+      ${copy.offline.strip.map((item) => `<li class="strip__item">${escapeHtml(item)}</li>`).join('')}
+    </ul>
+    <p class="principle principle--light">${escapeHtml(copy.offline.line)}</p>`,
+  })
+
+const feedbackSection = () =>
+  section({
+    id: 'feedback',
+    tone: 'light',
+    inner: `
+    <div class="lede">
+      ${eyebrow(copy.feedback.eyebrow)}
+      <h2>${escapeHtml(copy.feedback.heading)}</h2>
+      <p class="standfirst">${escapeHtml(copy.feedback.standfirst)}</p>
+    </div>
+    <div class="columns">
+      <div class="column">
+        <h3>${escapeHtml(copy.feedback.sends.title)}</h3>
+        ${list(copy.feedback.sends.items)}
+      </div>
+      <div class="column column--never">
+        <h3>${escapeHtml(copy.feedback.withheld.title)}</h3>
+        ${list(copy.feedback.withheld.items, 'crosses')}
+      </div>
+    </div>
+    <p class="principle principle--light">${escapeHtml(copy.feedback.line)}</p>`,
+  })
+
+const breachSection = () =>
+  section({
+    id: 'breach',
+    tone: 'ink',
+    inner: `
+    <div class="lede">
+      ${eyebrow(copy.breach.eyebrow)}
+      <h2>${escapeHtml(copy.breach.heading)}</h2>
+      ${paragraphs(copy.breach.body, 'standfirst')}
+    </div>
+    <p class="principle">${escapeHtml(copy.breach.line)}</p>`,
+  })
+
+const faqSection = () =>
+  section({
+    id: 'faq',
+    tone: 'paper',
+    inner: `
+    <div class="lede">
+      ${eyebrow(copy.faq.eyebrow)}
+      <h2>${escapeHtml(copy.faq.heading)}</h2>
+    </div>
+    <div class="faq">
+      ${copy.faq.items
+        .map(
+          (item) => `
+      <div class="faq__item">
+        <h3 class="faq__question">${escapeHtml(item.question)}</h3>
+        <p class="faq__answer">${escapeHtml(item.answer)}</p>
+      </div>`
+        )
+        .join('')}
+    </div>
+    <p class="hero__actions"><a class="button button--quiet" href="${url(
+      'privacy-security/'
+    )}">${escapeHtml(copy.faq.more)}</a></p>`,
+  })
+
 export function homePage({ screenshots = new Set() } = {}) {
   return page({
     title: `${config.productName} — ${config.tagline}`,
@@ -367,6 +462,7 @@ export function homePage({ screenshots = new Set() } = {}) {
     bodyClass: 'home',
     body: [
       heroSection(screenshots),
+      trustStripSection(),
       lateStartSection(),
       howSection(),
       featureSection({
@@ -408,12 +504,62 @@ export function homePage({ screenshots = new Set() } = {}) {
       }),
       assistSection(),
       privacySection(),
+      offlineSection(),
+      feedbackSection(),
+      breachSection(),
       notSurveillanceSection(),
       aiSection(),
       useCasesSection(),
       macSection(),
+      faqSection(),
       previewSection(),
     ].join('\n'),
+  })
+}
+
+/* -------------------------------------------------- privacy and security */
+
+export function privacySecurityPage() {
+  const block = copy.privacyPage
+  const body = section({
+    tone: 'paper',
+    className: 'prose-band',
+    inner: `
+    <div class="lede">
+      ${eyebrow(block.eyebrow)}
+      <h1>${escapeHtml(block.headline)}</h1>
+      <p class="standfirst">${escapeHtml(block.standfirst)}</p>
+      <p class="hero__note">${escapeHtml(block.note)}</p>
+    </div>
+    <nav class="contents" aria-label="On this page">
+      ${block.sections
+        .map((item) => `<a href="#${item.id}">${escapeHtml(item.question)}</a>`)
+        .join('')}
+    </nav>
+    ${block.sections
+      .map(
+        (item) => `
+    <article class="qa" id="${item.id}">
+      <h2 class="qa__question">${escapeHtml(item.question)}</h2>
+      ${item.answer ? `<p class="qa__answer">${escapeHtml(item.answer)}</p>` : ''}
+      ${paragraphs(item.body)}
+    </article>`
+      )
+      .join('')}
+    <div class="note-card">
+      <h3>${escapeHtml(block.help.heading)}</h3>
+      <p>${escapeHtml(block.help.text)}</p>
+      <p><a class="button button--quiet" href="${config.helpURL}" rel="noreferrer">${escapeHtml(
+        config.helpLabel
+      )}</a></p>
+    </div>`,
+  })
+  return page({
+    title: `Privacy and Security — ${config.productName}`,
+    description:
+      'What Onceaway observes, what it never records, where it is stored, and what leaves your Mac when you send feedback.',
+    route: 'privacy-security/',
+    body,
   })
 }
 
