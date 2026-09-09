@@ -1,0 +1,127 @@
+/*
+ * Trust styles: the strip, the FAQ, and the Privacy and Security page.
+ *
+ * Kept beside theme.css rather than inside it, and concatenated at build
+ * time, so the sections added for the privacy story can be read on their
+ * own. Same tokens, same conventions.
+ */
+
+/* ------------------------------------------------------- the trust strip */
+/* Directly under the hero: the five-second version, scanned rather than read. */
+
+.strip-band { padding-block: 0; }
+
+.strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2.25rem;
+  margin: 0;
+  padding: 1.15rem 1.5rem;
+  list-style: none;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+  background: var(--light);
+}
+
+.strip__item {
+  position: relative;
+  padding-left: 1.6rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--body);
+}
+
+.strip__item::before {
+  content: '';
+  position: absolute;
+  left: 0.15rem;
+  top: 50%;
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-top: -0.225rem;
+  border-radius: 50%;
+  background: var(--green-text);
+}
+
+@media (max-width: 40rem) {
+  .strip { gap: 0.6rem 1.25rem; padding: 1rem 1.15rem; }
+  .strip__item { font-size: 0.9rem; }
+}
+
+/* --------------------------------------------------------------- the FAQ */
+/* Answers are visible, not folded away: hiding reassurance behind a click is
+   the wrong instinct on a page whose job is to reassure. */
+
+.faq {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  gap: 1.75rem 2.5rem;
+  margin-top: 2.5rem;
+}
+
+.faq__question {
+  margin: 0 0 0.4rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.faq__answer {
+  margin: 0;
+  color: var(--body-muted);
+}
+
+/* ------------------------------------ privacy and security: the long form */
+
+.contents {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin: 2.5rem 0 1rem;
+  padding: 1.5rem 1.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+  background: var(--light);
+}
+
+.contents a {
+  color: var(--body);
+  text-decoration: none;
+  font-size: 0.98rem;
+}
+
+.contents a:hover,
+.contents a:focus-visible { color: var(--green-text); text-decoration: underline; }
+
+.qa {
+  padding: 2.25rem 0;
+  border-bottom: 1px solid var(--line);
+  scroll-margin-top: 5rem;
+}
+
+.qa:last-of-type { border-bottom: 0; }
+
+.qa__question {
+  margin: 0 0 0.75rem;
+  font-size: var(--step-2);
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.qa__answer {
+  display: inline-block;
+  margin: 0 0 0.9rem;
+  padding: 0.25rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--green-text);
+  color: var(--green-text);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.qa p:not(.qa__answer) { margin: 0 0 0.9rem; max-width: 44rem; }
+.qa p:last-child { margin-bottom: 0; }
+
+
+/* The trust strip again, this time inside a band rather than under the hero. */
+.strip--inline { margin: 2.25rem 0 0; }
