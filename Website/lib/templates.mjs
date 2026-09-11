@@ -50,9 +50,12 @@ const footer = () => `
 /**
  * The page shell.
  *
- * No fonts are fetched, no scripts are loaded from anywhere else, and there
- * is nothing here that would make a request to a third party. A visitor's
- * browser talks to this site and nothing else.
+ * No fonts are fetched, no scripts are loaded from anywhere else, and nothing
+ * here makes a request to a third party on its own. A visitor's browser talks
+ * to this site and nothing else, until they type an address into the
+ * waiting-list form and press the button — which posts to the endpoint named
+ * in `config.preview.waitingListEndpoint`, and is stated in the line beneath
+ * the field. That is the only exception, and it is theirs to make.
  */
 function page({ title, description, route = '', body, bodyClass = '' }) {
   const canonical = absoluteURL(route)
@@ -324,13 +327,45 @@ const macSection = () =>
   })
 
 /**
+ * The waiting-list form.
+ *
+ * It posts straight to the configured endpoint, so it works with the script
+ * blocked or broken — the only cost then is landing on the endpoint's own
+ * JSON reply. The script turns that into a confirmation in place.
+ *
+ * Nothing here is fetched from anybody else. The provider's own embed pulls a
+ * webfont from Google and brings its own styling; this is the site's markup,
+ * wearing the site's stylesheet, posting to the same address.
+ */
+const signupForm = () => {
+  const endpoint = config.preview.waitingListEndpoint
+  if (!endpoint) return ''
+  const block = copy.preview.signup
+  return `
+      <form class="signup" action="${endpoint}" method="POST">
+        <label class="visually-hidden" for="signup-email">${escapeHtml(block.legend)}</label>
+        <div class="signup__row">
+          <input class="signup__input" id="signup-email" type="email" name="email" required
+            autocomplete="email" placeholder="${escapeHtml(block.placeholder)}">
+          <button class="button signup__button" type="submit">${escapeHtml(block.action)}</button>
+        </div>
+        <p class="signup__note">${escapeHtml(block.note)}</p>
+        <p class="signup__result" role="status" data-success="${escapeHtml(
+          block.success
+        )}" data-failure="${escapeHtml(block.failure)}"></p>
+      </form>`
+}
+
+/**
  * The Preview section.
  *
- * There is no signup, so there is no form: a field that goes nowhere is
- * worse than an honest sentence. The tester disk image is not linked here or
- * anywhere else on the site — it is signed only for the machine that built
- * it, and handing it to the public would be handing out something that does
- * not work.
+ * The card used to end on a sentence and nothing else, which left the only
+ * way on from the bottom of the page being to leave it. It now ends on the
+ * waiting list.
+ *
+ * The tester disk image is not linked here or anywhere else on the site — it
+ * is signed only for the machine that built it, and handing it to the public
+ * would be handing out something that does not work.
  */
 const previewSection = () => {
   const invitation = config.preview.invitationURL
@@ -352,9 +387,12 @@ const previewSection = () => {
         <p class="preview__detail">${escapeHtml(copy.preview.state.detail)}</p>
         ${
           invitation
-            ? `<p><a class="button" href="${invitation}" rel="noreferrer">Join the Preview</a></p>`
+            ? `<p><a class="button" href="${invitation}" rel="noreferrer">${escapeHtml(
+                copy.preview.state.action
+              )}</a></p>`
             : ''
         }
+        ${signupForm()}
       </div>
       <div class="preview__help">
         <h3>${escapeHtml(copy.preview.help.heading)}</h3>

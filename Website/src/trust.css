@@ -223,6 +223,63 @@
 .loop-toggle:hover,
 .loop-toggle:focus-visible { color: var(--green-text); text-decoration-color: currentColor; }
 
+/* ------------------------------------------------- the waiting-list form */
+
+/* Built from the site's own tokens rather than the provider's embed, which
+   arrives with its own webfont and styling. This sits inside .preview__state
+   on the ink band, so it takes the dark-band foreground colours. */
+
+.signup { margin: 18px 0 0; }
+
+.signup__row { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* `display: flex` here beats the browser's own rule for [hidden], so the row
+   would stay on screen after a successful signup without this. */
+.signup__row[hidden] { display: none; }
+
+.signup__input {
+  flex: 1 1 14rem;
+  min-width: 0;
+  padding: 0.72rem 0.95rem;
+  border: 1px solid var(--border-dark);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--off-white);
+  font: inherit;
+  font-size: 0.9375rem;
+}
+
+.signup__input::placeholder { color: rgba(233, 236, 241, 0.45); }
+
+.signup__input:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.signup__button { flex: 0 0 auto; cursor: pointer; border: 0; }
+
+/* The line that says where the address goes. Quiet, but never hidden: the
+   validator refuses to render the field without it. */
+.signup__note {
+  margin: 12px 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--body-dim, rgba(233, 236, 241, 0.62));
+  max-width: 46ch;
+}
+
+/* Empty until the script has something to say, so it takes no space and is
+   announced rather than read out on load. */
+.signup__result { margin: 12px 0 0; font-size: 0.9375rem; color: var(--green); }
+.signup__result:empty { display: none; }
+.signup__result.is-error { color: #ffb4a8; }
+
+@media (max-width: 30rem) {
+  .signup__row { flex-direction: column; }
+  .signup__button { width: 100%; }
+}
+
 /* .note-card paints its own dark surface, so it has to carry its own
    foreground colours. It was only ever used inside an ink band, where the
    band supplied them; on paper the heading and the button inherited the dark
