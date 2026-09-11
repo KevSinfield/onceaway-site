@@ -23,17 +23,38 @@ async function availableScreenshots() {
   }
 }
 
+/**
+ * Whether the hero's animated tour is present and complete.
+ *
+ * All four screens or none: a tour missing a frame would show a gap where a
+ * screen should be, and the first frame is also what the hero falls back to
+ * for anyone who asked for less motion.
+ */
+async function heroLoopAvailable() {
+  const wanted = ['1-home.webp', '2-patterns.webp', '3-opportunity.webp', '4-insights.webp']
+  try {
+    const present = new Set(await readdir(path.join(publicDir, 'hero')))
+    return wanted.every((file) => present.has(file))
+  } catch {
+    return false
+  }
+}
+
 export async function build({ quiet = false } = {}) {
   const log = (...args) => {
     if (!quiet) console.log(...args)
   }
 
   const screenshots = await availableScreenshots()
+  const heroLoop = await heroLoopAvailable()
   const releases = await loadReleases()
-  log(`Building ${config.siteName}: ${releases.length} release note(s), ${screenshots.size} screenshot(s)`)
+  log(
+    `Building ${config.siteName}: ${releases.length} release note(s), ${screenshots.size} screenshot(s), ` +
+      `hero ${heroLoop ? 'loop' : 'still'}`
+  )
 
   const pages = [
-    ['index.html', homePage({ screenshots })],
+    ['index.html', homePage({ screenshots, heroLoop })],
     [path.join('changelog', 'index.html'), changelogPage(releases)],
     [path.join('privacy-security', 'index.html'), privacySecurityPage()],
     ['404.html', notFoundPage()],

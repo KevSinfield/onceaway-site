@@ -33,11 +33,69 @@ export function productFrame(screen, { screenshots = new Set(), className = '' }
     : appScreen(screen)
   return `
 <figure class="frame ${className}"${hasPhoto ? '' : ' role="img" aria-label="' + escapeHtml(screen.alt) + '"'}>
-  <div class="frame__chrome" aria-hidden="true">
-    <span class="frame__dot"></span><span class="frame__dot"></span><span class="frame__dot"></span>
-  </div>
+  ${hasPhoto ? '' : chrome()}
   <div class="frame__body">${inner}</div>
 </figure>`
+}
+
+/**
+ * The three dots along the top of a drawn frame.
+ *
+ * Only drawn frames get one. A real capture is a whole window and arrives
+ * with a title bar of its own — `public/screenshots/README.md` asks for the
+ * window rather than its contents — so drawing a second one above it would
+ * give the app two.
+ */
+const chrome = () => `
+  <div class="frame__chrome" aria-hidden="true">
+    <span class="frame__dot"></span><span class="frame__dot"></span><span class="frame__dot"></span>
+  </div>`
+
+/**
+ * The hero's animated tour: four real captures, crossfaded.
+ *
+ * The animation is CSS over four plain images rather than one packed
+ * animated file. That is not a workaround: it crossfades properly, stays
+ * sharp at any size, needs no palette, and `prefers-reduced-motion` is
+ * handled by the stylesheet rather than by shipping a second asset.
+ *
+ * Every image is loaded, so the tour never stutters on its first pass, and
+ * the frames are positioned on top of one another with the first in normal
+ * flow so the figure keeps the height of a single window.
+ *
+ * Only the first frame carries the alt text. The other three are decorative:
+ * a screen reader should hear one description of what the tour shows, not
+ * four near-identical ones.
+ *
+ * The pause control is `hidden` in the markup and revealed by the script, so
+ * a browser running no JavaScript is never shown a button that does nothing.
+ * Content that moves for more than five seconds has to be stoppable, and this
+ * loop runs for about twelve.
+ *
+ * It sits below the window rather than on top of it. The capture inside the
+ * frame is drawn at about half size, so any control legible enough to use
+ * would be larger than every button in the picture it covered, and would read
+ * as part of the app — which has a Pause button of its own, for something
+ * else entirely.
+ */
+export function heroLoop(copy) {
+  const frames = copy.frames
+    .map(
+      (frame, index) => `
+      <img class="loop__frame" style="--i:${index}" src="${url(`hero/${frame.file}`)}"
+        width="900" height="580" decoding="async"${index ? ' alt="" aria-hidden="true"' : ` alt="${escapeHtml(copy.alt)}"`}>`
+    )
+    .join('')
+  return `
+<div class="loop">
+  <figure class="frame frame--hero frame--loop" style="--frames:${copy.frames.length}">${frames}
+  </figure>
+  <p class="loop__control">
+    <button class="loop-toggle" type="button" hidden data-pause="${escapeHtml(
+      copy.pause
+    )}" data-play="${escapeHtml(copy.play)}">${escapeHtml(copy.pause)}</button>
+  </p>
+</div>`
 }
 
 /** The app's own chrome: its sidebar, and whichever screen is shown. */

@@ -22,6 +22,29 @@ export const hero = {
 }
 
 /**
+ * The words attached to the animated tour in the hero.
+ *
+ * The alt text describes what the recording shows rather than what the
+ * product promises. Someone who cannot see it should come away knowing which
+ * screens exist, not be sold to a second time.
+ */
+export const heroLoopCopy = {
+  frames: [
+    { file: '1-home.webp' },
+    { file: '2-patterns.webp' },
+    { file: '3-opportunity.webp' },
+    { file: '4-insights.webp' },
+  ],
+  alt: 'Onceaway moving through four of its screens: Home, where a noticed repeat waits for a yes or no; Patterns, the list of everything noticed so far; a single opportunity opened, showing its stages from noticed through to reduction; and Insights, where the counts are charted over time.',
+  // Named for what it stops. The app has a Pause button of its own, visible
+  // in the first screen, and that one stops observation — a control sitting
+  // on top of the picture must not be mistakable for it. "Recording" is out
+  // for the same reason: the strip below the hero promises there is none.
+  pause: 'Pause animation',
+  play: 'Play animation',
+}
+
+/**
  * The differentiation block, and the strongest argument on the site: the
  * problem is not building automation, it is knowing what to build.
  */

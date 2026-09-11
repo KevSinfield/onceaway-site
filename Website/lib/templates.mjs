@@ -2,7 +2,7 @@ import { config, url, absoluteURL } from '../config.mjs'
 import { markSvg } from '../src/brand.mjs'
 import { screens } from '../content/screens.mjs'
 import * as copy from '../content/site.mjs'
-import { escapeHtml, eyebrow, list, lockup, paragraphs, productFrame, section } from './components.mjs'
+import { escapeHtml, eyebrow, heroLoop, list, lockup, paragraphs, productFrame, section } from './components.mjs'
 
 /* ------------------------------------------------------------------ shell */
 
@@ -91,7 +91,13 @@ ${footer()}
 
 /* ------------------------------------------------------------------- home */
 
-const heroSection = (screenshots) => `
+/**
+ * The hero. Its visual is the animated tour when `public/hero/` holds one,
+ * and the Home screen otherwise — drawn or photographed, whichever exists.
+ * Nothing in `public/` is required for the site to build, so the hero has to
+ * stand up without any of it.
+ */
+const heroSection = (screenshots, loop) => `
 <section class="band band--paper hero">
   <div class="wrap hero__inner">
     <div class="hero__text">
@@ -107,7 +113,7 @@ const heroSection = (screenshots) => `
       <p class="hero__note">${escapeHtml(copy.hero.note)}</p>
     </div>
     <div class="hero__visual">
-      ${productFrame(screens.home, { screenshots, className: 'frame--hero' })}
+      ${loop ? heroLoop(copy.heroLoopCopy) : productFrame(screens.home, { screenshots, className: 'frame--hero' })}
     </div>
   </div>
 </section>`
@@ -455,13 +461,13 @@ const faqSection = () =>
     )}">${escapeHtml(copy.faq.more)}</a></p>`,
   })
 
-export function homePage({ screenshots = new Set() } = {}) {
+export function homePage({ screenshots = new Set(), heroLoop: loop = false } = {}) {
   return page({
     title: `${config.productName} — ${config.tagline}`,
     description: config.description,
     bodyClass: 'home',
     body: [
-      heroSection(screenshots),
+      heroSection(screenshots, loop),
       trustStripSection(),
       lateStartSection(),
       howSection(),

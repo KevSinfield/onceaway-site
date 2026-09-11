@@ -1,7 +1,8 @@
 /*
- * The only script on this site, and it does one thing: fades a section in the
- * first time it comes into view. No analytics, no tracking, no third party,
- * no cookies, nothing stored, nothing sent.
+ * The only script on this site. It does two things: it fades a section in the
+ * first time it comes into view, and it lets the hero's animation be stopped.
+ * No analytics, no tracking, no third party, no cookies, nothing stored,
+ * nothing sent.
  *
  * Nothing is ever hidden waiting to be revealed. A section is visible from the
  * moment it is parsed; the script only asks it to animate in as it arrives.
@@ -10,6 +11,36 @@
  *
  * Anyone who has asked for reduced motion gets none of it.
  */
+
+/*
+ * The hero's pause control.
+ *
+ * The button ships hidden and is revealed here, so a browser with no
+ * JavaScript never shows one that would do nothing.
+ *
+ * The tour is a CSS animation, so stopping it is one class: the stylesheet
+ * owns the behaviour and this only flips a switch. Anyone who has asked for
+ * reduced motion is already being shown a single still by the stylesheet, so
+ * there is nothing to pause and no button to show.
+ */
+;(function () {
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  var toggle = document.querySelector('.loop-toggle')
+  if (!toggle || reduced) return
+
+  var loop = toggle.closest ? toggle.closest('.loop') : null
+  var figure = loop && loop.querySelector('.frame--loop')
+  if (!figure) return
+
+  var playing = true
+  toggle.hidden = false
+  toggle.addEventListener('click', function () {
+    playing = !playing
+    figure.classList.toggle('is-paused', !playing)
+    toggle.textContent = toggle.getAttribute(playing ? 'data-pause' : 'data-play')
+  })
+})()
+
 ;(function () {
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   if (reduced || !('IntersectionObserver' in window)) return

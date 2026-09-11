@@ -151,6 +151,78 @@
 .strip--inline { margin: 2.25rem 0 0; }
 
 
+/* ------------------------------------------------- the hero's animated tour */
+
+/* Each frame is a whole macOS window, so .frame supplies only the border, the
+   shadow and the radius — no drawn title bar above one the capture already
+   has. */
+
+.frame--loop { position: relative; }
+
+/* The first frame sits in normal flow and gives the figure its height; the
+   rest stack on top of it. All four are in the page from the start, so the
+   first pass of the tour is no different from the fifth. */
+.loop__frame { display: block; width: 100%; height: auto; }
+.loop__frame + .loop__frame { position: absolute; inset: 0; }
+
+/* One shared cycle, each frame offset by its own share of it.
+
+   Twelve seconds, four screens, three each, of which the last half-second is
+   the crossfade: opaque to 25%, faded out by 29%, and faded back in over the
+   final 4%. A frame fades in while the one before it is still opaque
+   underneath, which is what makes the change read as a dissolve rather than
+   a dip through the background.
+
+   The negative delay starts each frame partway through the cycle, so that
+   frame i reaches the top of its keyframes exactly when its slot begins.
+   The percentages assume four screens; `--i` and `--frames` come from the
+   markup so the offsets look after themselves. */
+@keyframes loop-frame {
+  0%, 25% { opacity: 1; }
+  29%, 96% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.loop__frame + .loop__frame {
+  animation-name: loop-frame;
+  animation-duration: 12s;
+  animation-delay: calc((var(--i) - var(--frames)) * 3s);
+  animation-iteration-count: infinite;
+}
+
+/* The first frame is the layer underneath and never animates: it gives the
+   figure its height, and it is what the last frame dissolves back to. */
+
+.frame--loop.is-paused .loop__frame { animation-play-state: paused; }
+
+/* Anyone who asked for less motion gets the first screen, still — and the
+   stylesheet settles it, so there is no second asset to ship and no script
+   to run. */
+@media (prefers-reduced-motion: reduce) {
+  .loop__frame + .loop__frame { animation: none; opacity: 0; }
+}
+
+/* Under the window, aligned to its right edge: a quiet piece of page
+   furniture rather than something pretending to belong to the app. */
+.loop__control { display: flex; justify-content: flex-end; margin: 10px 0 0; }
+
+.loop-toggle {
+  padding: 0.2rem 0.15rem;
+  border: 0;
+  background: none;
+  color: var(--body-muted);
+  font: inherit;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: rgba(15, 18, 24, 0.22);
+  text-underline-offset: 3px;
+}
+
+.loop-toggle:hover,
+.loop-toggle:focus-visible { color: var(--green-text); text-decoration-color: currentColor; }
+
 /* .note-card paints its own dark surface, so it has to carry its own
    foreground colours. It was only ever used inside an ink band, where the
    band supplied them; on paper the heading and the button inherited the dark

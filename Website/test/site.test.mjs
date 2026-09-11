@@ -290,10 +290,52 @@ describe('structure and access', () => {
       'a section animation fills backwards, which paints it invisible when queued')
   })
 
-  test('the decorative product frame is hidden from screen readers and described', async () => {
+  test('every drawn product frame is hidden from screen readers and described', async () => {
     const home = await read('index.html')
-    assert.ok(home.includes('<div class="app" aria-hidden="true">'))
-    assert.ok(home.includes('role="img" aria-label="The Onceaway Home screen'))
+    const drawn = home.match(/<div class="app" aria-hidden="true">/g) ?? []
+    assert.ok(drawn.length > 0, 'the page draws no product frames at all')
+    // A drawn frame is decoration: its invented contents are hidden, and the
+    // figure around it carries the one description a screen reader should get.
+    const figures = home.match(/<figure class="frame[^"]*"[^>]*>/g) ?? []
+    const described = figures.filter((tag) => tag.includes('role="img"') && tag.includes('aria-label="'))
+    assert.equal(described.length, drawn.length, 'a drawn frame has no description')
+  })
+
+  test('the hero animation can be stopped, and is not sent to everyone', async () => {
+    const home = await read('index.html')
+    // `public/hero/` is optional, so this only applies where it exists.
+    if (!home.includes('frame--loop')) return
+    // The tour is several images, and a screen reader should hear one
+    // description of it rather than four near-identical ones.
+    const tour = home.match(/<img class="loop__frame"[\s\S]*?>/g) ?? []
+    assert.ok(tour.length > 1, 'the tour has fewer than two frames')
+    const spoken = tour.filter((tag) => /\balt="[^"]+"/.test(tag))
+    assert.equal(spoken.length, 1, 'the tour should carry exactly one description')
+    for (const tag of tour.filter((tag) => !/\balt="[^"]+"/.test(tag))) {
+      assert.ok(/\balt=""/.test(tag) && tag.includes('aria-hidden="true"'), 'a tour frame is neither described nor hidden')
+    }
+
+    // Reduced motion is settled by the stylesheet, not by a second asset.
+    const css = await read('assets/theme.css')
+    assert.ok(
+      /@media \(prefers-reduced-motion: reduce\) \{[^}]*\.loop__frame[\s\S]*?animation:\s*none/.test(css),
+      'the tour still animates for people who asked for less motion'
+    )
+    // Moving content that runs past five seconds has to be stoppable, and the
+    // control must not appear until the script that works it has run.
+    assert.ok(home.includes('class="loop-toggle" type="button" hidden'), 'the pause control ships visible')
+
+    const js = await read('assets/site.js')
+    assert.ok(js.includes('toggle.hidden = false'), 'nothing reveals the pause control')
+    // The script walks up from the button to find the image it controls. If
+    // the markup moves the button out of that container the button is simply
+    // never revealed, and the page looks fine while failing silently.
+    const container = js.match(/toggle\.closest\('\.([\w-]+)'\)/)
+    assert.ok(container, 'the script no longer looks for a container')
+    assert.ok(
+      new RegExp(`<div class="${container[1]}">[\\s\\S]*?loop-toggle`).test(home),
+      `the pause control is not inside the .${container[1]} the script looks for`
+    )
   })
 
   test('nothing is decided by colour alone', async () => {
