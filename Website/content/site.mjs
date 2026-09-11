@@ -222,6 +222,7 @@ export const notSurveillance = {
   body: [
     'There is no productivity score. No focus score. No time-wasted metric. No ranking, no league table, and nothing that reports on anyone to anyone.',
     'It is a single-person tool that runs on your own Mac and answers to you.',
+    'Buying licences for a team would change who pays and nothing else. What Onceaway noticed stays on the Mac that noticed it, and none of it reaches whoever bought the licence. There is no manager view, and nothing for one to show.',
   ],
   line: 'The goal is to reduce repeated work, not to judge your workday.',
 }
