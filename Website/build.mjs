@@ -3,6 +3,7 @@ import { createServer } from 'node:http'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { config, url } from './config.mjs'
+import { assets } from './lib/assets.mjs'
 import { loadReleases } from './lib/changelog.mjs'
 import { changelogPage, homePage, notFoundPage, privacySecurityPage } from './lib/templates.mjs'
 import { validate } from './lib/validate.mjs'
@@ -88,13 +89,12 @@ export async function build({ quiet = false } = {}) {
     await writeFile(target, html, 'utf8')
   }
 
-  // theme.css is the design system; trust.css holds the styles for the
-  // privacy sections. One stylesheet reaches the browser.
-  await writeFile(
-    path.join(dist, 'assets', 'theme.css'),
-    [await readFile(path.join(src, 'theme.css'), 'utf8'), await readFile(path.join(src, 'trust.css'), 'utf8')].join('\n')
-  )
-  await writeFile(path.join(dist, 'assets', 'site.js'), await readFile(path.join(src, 'site.js'), 'utf8'))
+  // What the pages linked to a moment ago, written to the paths they named.
+  // lib/assets.mjs owns both the contents and the version stamp in the URL,
+  // so the bytes that were hashed are the bytes that land here.
+  for (const [route, content] of Object.entries(assets)) {
+    await writeFile(path.join(dist, ...route.split('/')), content)
+  }
   await writeFile(path.join(dist, 'favicon.svg'), iconSvg())
   await writeFile(path.join(dist, 'social-card.svg'), socialCardSvg(config.tagline))
   await copyTree(publicDir, dist)

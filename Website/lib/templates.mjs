@@ -2,6 +2,7 @@ import { config, url, absoluteURL } from '../config.mjs'
 import { markSvg } from '../src/brand.mjs'
 import { screens } from '../content/screens.mjs'
 import * as copy from '../content/site.mjs'
+import { assetURL } from './assets.mjs'
 import { escapeHtml, eyebrow, heroLoop, list, lockup, paragraphs, productFrame, section } from './components.mjs'
 
 /* ------------------------------------------------------------------ shell */
@@ -56,6 +57,9 @@ const footer = () => `
  * waiting-list form and press the button — which posts to the endpoint named
  * in `config.preview.waitingListEndpoint`, and is stated in the line beneath
  * the field. That is the only exception, and it is theirs to make.
+ *
+ * The two assets are linked by `assetURL`, which stamps each address with a
+ * hash of the file's contents so a browser cannot serve a stale one.
  */
 function page({ title, description, route = '', body, bodyClass = '' }) {
   const canonical = absoluteURL(route)
@@ -77,7 +81,7 @@ ${canonical ? `<meta property="og:url" content="${canonical}">\n` : ''}${
     social ? `<meta property="og:image" content="${social}">\n` : ''
   }<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="${url('favicon.svg')}" type="image/svg+xml">
-<link rel="stylesheet" href="${url('assets/theme.css')}">
+<link rel="stylesheet" href="${assetURL('assets/theme.css')}">
 </head>
 <body class="${bodyClass}">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -86,7 +90,7 @@ ${header()}
 ${body}
 </main>
 ${footer()}
-<script src="${url('assets/site.js')}" defer></script>
+<script src="${assetURL('assets/site.js')}" defer></script>
 </body>
 </html>
 `
