@@ -43,16 +43,21 @@ export const config = {
   /**
    * What the public may currently do about getting Onceaway.
    *
-   * `invitationURL` is null because no signup exists. While it is null the
-   * Preview section states plainly that access is limited and offers Help
-   * instead — it never renders a form that goes nowhere, and it never links
-   * the tester build, which is signed for one machine and would not open on
-   * anybody else's.
+   * `invitationURL` is null because there is still nothing to join: it never
+   * links the tester build, which is signed for one machine and would not
+   * open on anybody else's.
+   *
+   * `waitingListEndpoint` is where the waiting-list form posts. It is the one
+   * place on this site a visitor's own details can go, so it is named here
+   * rather than buried in a template, and the validator refuses to render a
+   * form at all while it is null. A form with nowhere to go is worse than an
+   * honest sentence; a form with somewhere to go has to say where.
    */
   preview: {
     label: 'Onceaway Preview',
     version: '0.5.0',
     invitationURL: null,
+    waitingListEndpoint: 'https://app.loops.so/api/newsletter-form/cmtwvluf914jc0j1pkoh6t609',
   },
 }
 

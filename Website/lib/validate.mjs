@@ -72,9 +72,25 @@ export function validate(pages, { internalTerms = [] } = {}) {
     if (/localhost|127\.0\.0\.1/i.test(html)) say(route, 'contains a local address')
     if (/\/Users\/[A-Za-z]/.test(html)) say(route, "contains a path from somebody's computer")
 
-    // A form with nowhere to go is worse than an honest sentence.
-    if (/<form\b/i.test(html)) say(route, 'contains a form, and no form backend exists')
-    if (/type="email"/i.test(html)) say(route, 'asks for an email address')
+    // A form with nowhere to go is worse than an honest sentence, so a form
+    // is allowed only once an endpoint has been configured — and then only
+    // pointing at that endpoint, and only next to a line saying where the
+    // address goes. The rule did not go away; it grew the one exception the
+    // product actually has.
+    const endpoint = config.preview.waitingListEndpoint
+    for (const form of html.match(/<form\b[^>]*>/g) ?? []) {
+      if (!endpoint) {
+        say(route, 'contains a form, and no form endpoint is configured')
+      } else if (!form.includes(`action="${endpoint}"`)) {
+        say(route, 'contains a form posting somewhere other than the configured endpoint')
+      }
+    }
+    if (/type="email"/i.test(html)) {
+      if (!endpoint) say(route, 'asks for an email address with nowhere to send it')
+      else if (!html.includes('class="signup__note"')) {
+        say(route, 'asks for an email address without saying where it goes')
+      }
+    }
 
     // Accessibility and structure basics that are cheap to get wrong.
     if (!html.includes('class="skip-link"')) say(route, 'has no skip link')
