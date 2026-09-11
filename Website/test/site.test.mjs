@@ -106,8 +106,21 @@ describe('what the site claims', () => {
   test('the Preview state is stated plainly and nothing is sold', async () => {
     const home = await read('index.html')
     assert.ok(home.includes('Preview access is currently limited.'))
-    assert.ok(!/<form\b/i.test(home), 'there is a form, and no form backend exists')
-    assert.ok(!/type="email"/i.test(home))
+    // One form is allowed, and only the waiting list. It must post to the
+    // configured endpoint and say where the address goes; anything else on
+    // the page asking for details is a regression.
+    const forms = home.match(/<form\b[^>]*>/g) ?? []
+    assert.ok(forms.length <= 1, 'more than one form is on the page')
+    for (const form of forms) {
+      assert.ok(
+        form.includes(`action="${config.preview.waitingListEndpoint}"`),
+        'a form posts somewhere other than the configured endpoint'
+      )
+    }
+    if (/type="email"/i.test(home)) {
+      assert.ok(forms.length === 1, 'an email field outside the waiting-list form')
+      assert.ok(home.includes('class="signup__note"'), 'the email field does not say where the address goes')
+    }
     assert.ok(!/£\s?\d|\$\s?\d/.test(home), 'a price appeared')
     for (const shell of ['Invite your team', 'Get a free month', 'Unlock more with Pro']) {
       assert.ok(!home.includes(shell), `${shell} is a shell in the app and must not be sold here`)
@@ -143,10 +156,23 @@ describe('the site itself', () => {
     assert.ok(css.includes('-apple-system'), 'the system font stack is missing')
   })
 
-  test('the only script does one thing and stores nothing', async () => {
+  test('the script stores nothing and sends nothing on its own', async () => {
     const script = await read('assets/site.js')
-    for (const forbidden of ['fetch(', 'XMLHttpRequest', 'localStorage', 'sessionStorage', 'document.cookie', 'navigator.sendBeacon']) {
+    for (const forbidden of ['XMLHttpRequest', 'localStorage', 'sessionStorage', 'document.cookie', 'navigator.sendBeacon']) {
       assert.ok(!script.includes(forbidden), `the script uses ${forbidden}`)
+    }
+    // The script may make exactly one request, and only the one a person
+    // starts by submitting the waiting-list form. It posts to the address in
+    // that form's own action attribute rather than to anything written here,
+    // so the page shows every visitor where their address is going.
+    const calls = script.match(/fetch\(/g) ?? []
+    assert.ok(calls.length <= 1, `the script makes ${calls.length} requests`)
+    if (calls.length) {
+      assert.ok(script.includes('.fetch(form.action'), 'the request goes somewhere the page does not show')
+      assert.ok(
+        !/fetch\(\s*['"`]/.test(script),
+        'the script has a URL of its own to call'
+      )
     }
   })
 

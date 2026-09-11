@@ -83,3 +83,62 @@
     observer.observe(band)
   })
 })()
+
+/*
+ * The waiting-list form.
+ *
+ * The form already works without this: it posts to the endpoint on its own,
+ * and the only cost is that the browser then shows the endpoint's JSON reply.
+ * All this does is keep the person on the page and tell them what happened.
+ *
+ * Nothing is stored, nothing is sent anywhere except the address they typed,
+ * to the endpoint written in the form's own action attribute.
+ */
+;(function () {
+  var form = document.querySelector('.signup')
+  if (!form || !window.fetch) return
+
+  var result = form.querySelector('.signup__result')
+  var button = form.querySelector('.signup__button')
+  if (!result || !button) return
+
+  var say = function (message, failed) {
+    result.textContent = message
+    result.classList.toggle('is-error', !!failed)
+  }
+
+  form.addEventListener('submit', function (event) {
+    event.preventDefault()
+    var field = form.querySelector('.signup__input')
+    if (!field || !field.value) return
+
+    button.disabled = true
+    say('')
+
+    var body = new URLSearchParams()
+    body.append('email', field.value)
+
+    window
+      .fetch(form.action, {
+        method: 'POST',
+        body: body,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      })
+      .then(function (response) {
+        return response.json()
+      })
+      .then(function (data) {
+        if (data && data.success) {
+          form.querySelector('.signup__row').hidden = true
+          say(result.getAttribute('data-success'))
+        } else {
+          button.disabled = false
+          say((data && data.message) || result.getAttribute('data-failure'), true)
+        }
+      })
+      .catch(function () {
+        button.disabled = false
+        say(result.getAttribute('data-failure'), true)
+      })
+  })
+})()
