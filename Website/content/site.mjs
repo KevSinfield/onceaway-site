@@ -440,6 +440,11 @@ export const faq = {
         'Not to do its main job. Noticing repeated work and keeping your history happen on your Mac. A connection is needed only for an AI suggestion, sending feedback, or opening Help.',
     },
     {
+      question: 'Can I buy Onceaway for my team?',
+      answer:
+        'There is nothing to buy yet. When there is, a team licence would make billing simpler and nothing else — it would not let you watch anyone. Each install observes on that person’s own Mac and answers to them. There is no manager dashboard, and no way for one person to see another’s activity.',
+    },
+    {
       question: 'Can I delete what Onceaway has stored?',
       answer:
         'Yes. It is one local database in your Application Support folder. Delete the folder and it is gone.',
