@@ -294,7 +294,29 @@ export const preview = {
     platform: 'Mac',
     label: 'Preview access is currently limited.',
     detail:
-      'When Onceaway is ready for a wider release, this is where it will be. Until then the Help guide is the best way to see how it works.',
+      'When Onceaway is ready for a wider release, this is where it will be. Until then you can put your name on the waiting list.',
+    // The button only appears when config.preview.invitationURL is set. It
+    // says waiting list rather than anything about access, because that is
+    // what joining it gets you: a message when there is something to say.
+    action: 'Join the waiting list',
+  },
+
+  /**
+   * The waiting-list form.
+   *
+   * The note under the field is not a disclaimer, it is the point. This site
+   * spends a page explaining that Onceaway sends nothing anywhere, and then
+   * asks for an email address; not saying plainly where that address goes
+   * would undo more than the form is worth. The validator will not render the
+   * field without it.
+   */
+  signup: {
+    legend: 'Join the Onceaway waiting list',
+    placeholder: 'you@example.com',
+    action: 'Join the waiting list',
+    note: 'We use your address to tell you about Onceaway, and nothing else. It is held by Loops, our email provider, and you can leave the list at any time.',
+    success: 'You are on the list. We will be in touch when there is something worth telling you.',
+    failure: 'That did not go through. Try again, or email us from the Help site.',
   },
   help: {
     heading: 'Onceaway Help',
